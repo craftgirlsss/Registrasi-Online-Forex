@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forex_regol/src/components/texts/texts.dart';
 import 'package:forex_regol/src/components/themes/custom_scaffold.dart';
-import 'package:forex_regol/src/views/regist-online/web_socket_page.dart';
 import 'package:forex_regol/src/views/utilities/numbered_text_list.dart';
 import 'package:forex_regol/src/views/utilities/statement_text.dart';
 import 'package:forex_regol/src/views/utilities/table_company_profile.dart';
@@ -28,7 +27,7 @@ class _HalamanSatuProfilPerusahaanState extends State<HalamanSatuProfilPerusahaa
   Widget build(BuildContext context) {
     return DefaultScaffold(
       onPressed: (){
-        Get.to(() => const HalamanDuaPemilihanProduk());
+        Get.to(() => TradeFormScreen());
       },
       children: [
         CustomText.titleHeadingPage(context, text: "PROFIL PERUSAHAAN PIALANG BERJANGKA"),

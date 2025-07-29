@@ -458,10 +458,14 @@ class _DefaultScaffoldState extends State<DefaultScaffold> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Obx(
-                                        () => Text(
-                                          DateFormat('EEEE, dd MMMM yyyy').add_jms().format(dateTimeController.currentDateTime),
-                                          style: Theme.of(context).textTheme.bodyMedium,
+                                      Expanded(
+                                        child: Obx(
+                                          () => Text(
+                                            DateFormat('EEEE, dd MMMM yyyy').add_jms().format(dateTimeController.currentDateTime),
+                                            style: Theme.of(context).textTheme.bodyMedium,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                       ),
                                       Icon(CupertinoIcons.clock, color: Colors.black38)
