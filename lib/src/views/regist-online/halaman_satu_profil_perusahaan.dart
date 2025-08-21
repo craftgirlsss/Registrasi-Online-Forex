@@ -26,8 +26,10 @@ class _HalamanSatuProfilPerusahaanState extends State<HalamanSatuProfilPerusahaa
   @override
   Widget build(BuildContext context) {
     return DefaultScaffold(
+      withBottomMenu: true,
+      title: "Profil Perusahaan Pialang",
       onPressed: (){
-        Get.to(() => TradeFormScreen());
+        Get.to(() => HalamanDuaProfilPerusahaan());
       },
       children: [
         CustomText.titleHeadingPage(context, text: "PROFIL PERUSAHAAN PIALANG BERJANGKA"),
@@ -99,7 +101,7 @@ class _HalamanSatuProfilPerusahaanState extends State<HalamanSatuProfilPerusahaa
             'Bank BCA KCU Chase Plaza Sudirman \n035-329-9902 (USD)',
           ],
         ),
-        StatementTextWidget(dynamicTitlePart: "PROFIL PERUSAHAAN PIALANG BERJANGKA")
+        StatementWidget.pernyataanTelahMembaca(dynamicTitlePart: "PROFIL PERUSAHAAN PIALANG BERJANGKA"),
       ],
     );
   }

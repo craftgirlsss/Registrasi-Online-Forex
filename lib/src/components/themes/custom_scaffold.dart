@@ -244,17 +244,22 @@
 // }
 
 
+import 'dart:ui';
+
 import 'package:cupertino_rrect/cupertino_rrect.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:forex_regol/src/components/texts/texts.dart';
 import 'package:forex_regol/src/controllers/datetime_controller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class DefaultScaffold extends StatefulWidget {
-  const DefaultScaffold({super.key, required this.children, this.onPressed});
+  const DefaultScaffold({super.key, required this.children, this.onPressed, this.withBottomMenu, this.title});
   final List<Widget> children;
   final VoidCallback? onPressed;
+  final bool? withBottomMenu;
+  final String? title;
 
   @override
   State<DefaultScaffold> createState() => _DefaultScaffoldState();
@@ -316,34 +321,41 @@ class _DefaultScaffoldState extends State<DefaultScaffold> {
         backgroundColor: Colors.grey.shade100,
         body: Stack(
           children: [
-            Positioned(
-              top: 0,
-              child: Container(
-                width: size.width,
-                height: 140,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.grey.shade500,
-                      Colors.grey.shade400,
-                      Colors.grey.shade300,
-                      Colors.grey.shade200,
-                      Colors.grey.shade100,
-                    ]
-                  )
-                ),
-              )
-            ),
             // SCROLLABLE CONTENT
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: SingleChildScrollView(
                 controller: _scrollController,
-                padding: const EdgeInsets.only(top: 80.0, bottom: 170.0), // Bottom extra space
+                padding: EdgeInsets.only(top: 100.0, bottom: widget.withBottomMenu == true ? 170.0 : 20.0), // Bottom extra space
                 child: Column(
                   children: widget.children,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: ClipRRect(// Optional: rounded corners for the blurred area
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0), // Adjust sigmaX and sigmaY for blur intensity
+                    child: Container(
+                      width: double.infinity,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            Colors.white.withOpacity(0.1),
+                            Colors.grey.withOpacity(0.2),
+                            Colors.grey.withOpacity(0.7)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -361,9 +373,11 @@ class _DefaultScaffoldState extends State<DefaultScaffold> {
                       Navigator.of(context).pop();
                     },
                     child: Container(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, right: 15.0, left: 5.0),
                       decoration: BoxDecoration(
                         color: Colors.white,
+                        border: Border.all(color: Colors.black26, width: 0.1),
+                        borderRadius: BorderRadius.circular(30.0),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.1),
@@ -372,18 +386,25 @@ class _DefaultScaffoldState extends State<DefaultScaffold> {
                             offset: const Offset(0, 3),
                           ),
                         ],
-                        shape: BoxShape.circle,
                       ),
-                      child: const Icon(CupertinoIcons.back, color: Colors.black54),
+                      child: Row(
+                        children: [
+                          const Icon(CupertinoIcons.back, color: Colors.black54),
+                          Text("Back", style: Theme.of(context).textTheme.bodyMedium)
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(widget.title ?? "", style: Theme.of(context).textTheme.titleSmall)
+                  )
                 ],
               ),
             ),
 
             // ANIMATED BOTTOM CONTAINER
-            Align(
+            widget.withBottomMenu == true ? Align(
               alignment: Alignment.bottomCenter,
               child: AnimatedOpacity(
                 opacity: _showBottomContainer ? 1.0 : 0.0,
@@ -475,29 +496,37 @@ class _DefaultScaffoldState extends State<DefaultScaffold> {
                               ),
                             ),
                             const SizedBox(width: 6.0),
-                            CupertinoButton(
-                              onPressed: widget.onPressed, // No need for selectedOption.value == "" ? null : widget.onPressed here
-                              padding: EdgeInsets.zero,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.1),
-                                      spreadRadius: 1,
-                                      blurRadius: 5,
-                                      offset: const Offset(0, 3), // changes position of shadow
+                            Obx(
+                              () => AnimatedCrossFade(
+                                duration: const Duration(milliseconds: 300),
+                                secondCurve: Curves.easeInExpo,
+                                crossFadeState: selectedOption.value == "" ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                firstChild: const SizedBox(),
+                                secondChild: CupertinoButton(
+                                  onPressed: widget.onPressed, // No need for selectedOption.value == "" ? null : widget.onPressed here
+                                  padding: EdgeInsets.zero,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(30.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.1),
+                                          spreadRadius: 1,
+                                          blurRadius: 5,
+                                          offset: const Offset(0, 3), // changes position of shadow
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text("Submit", style: Theme.of(context).textTheme.bodyMedium),
-                                    const SizedBox(width: 5.0),
-                                    const Icon(CupertinoIcons.arrow_right, color: Colors.black45),
-                                  ],
+                                    child: Row(
+                                      children: [
+                                        Text("Submit", style: Theme.of(context).textTheme.bodyMedium),
+                                        const SizedBox(width: 5.0),
+                                        const Icon(CupertinoIcons.arrow_right, color: Colors.black45),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -508,7 +537,7 @@ class _DefaultScaffoldState extends State<DefaultScaffold> {
                   ),
                 ),
               ),
-            ),
+            ) : const SizedBox(),
           ],
         ),
       ),

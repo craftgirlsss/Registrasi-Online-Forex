@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:forex_regol/src/components/themes/themes.dart';
 import 'package:forex_regol/src/views/regist-online/halaman_satu_profil_perusahaan.dart';
 import 'package:get/get.dart';
-import 'package:intl/date_symbol_data_file.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Regol App',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const HalamanSatuProfilPerusahaan(),
+      home: HalamanSatuProfilPerusahaan(),
     );
   }
 }
