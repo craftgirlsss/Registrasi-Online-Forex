@@ -18,6 +18,7 @@ dependencies:
   intl: ^0.20.2
   bounce: ^1.0.2
   motion: ^2.0.1
+  image_picker: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -34,7 +35,6 @@ flutter:
     - assets/images/
     - assets/jsons/
     - assets/documents/
-    - images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

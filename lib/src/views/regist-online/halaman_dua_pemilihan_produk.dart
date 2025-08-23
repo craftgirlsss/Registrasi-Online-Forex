@@ -82,7 +82,7 @@ class HalamanDuaProfilPerusahaan extends StatelessWidget {
                 ...controller.currentProductOptions.map((option) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 15.0), // Space between cards
-                    child: DefaultDropDown.buildProductOptionCard(option), // Use the new helper
+                    child: DefaultDropDown.buildProductOptionCard(option, (){}), // Use the new helper
                   );
                 }).toList(),
               ],

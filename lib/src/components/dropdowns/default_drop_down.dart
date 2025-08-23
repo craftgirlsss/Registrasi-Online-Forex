@@ -1,3 +1,4 @@
+import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -22,40 +23,42 @@ class DefaultDropDown {
           ),
         ),
         const SizedBox(height: 8),
-        Obx(
-          () => Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8.0),
-              border: Border.all(color: Colors.black12, width: 0.2),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                  offset: const Offset(0, 3),
+        Bounce(
+          child: Obx(
+            () => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8.0),
+                border: Border.all(color: Colors.black12, width: 0.2),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  elevation: 2,
+                  borderRadius: BorderRadius.circular(20.0),
+                  value: value,
+                  isExpanded: true,
+                  icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                  ),
+                  onChanged: onChanged,
+                  items: items.map<DropdownMenuItem<String>>((String item) {
+                    return DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(item),
+                    );
+                  }).toList(),
                 ),
-              ],
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                elevation: 2,
-                borderRadius: BorderRadius.circular(20.0),
-                value: value,
-                isExpanded: true,
-                icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
-                onChanged: onChanged,
-                items: items.map<DropdownMenuItem<String>>((String item) {
-                  return DropdownMenuItem<String>(
-                    value: item,
-                    child: Text(item),
-                  );
-                }).toList(),
               ),
             ),
           ),
@@ -114,55 +117,58 @@ class DefaultDropDown {
 
 
   // Helper method to build a single product option card
-  static Widget buildProductOptionCard(dynamic option) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blue.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.check_circle_outline, color: Colors.green, size: 24), // Icon for option
-              const SizedBox(width: 10),
-              // Could add a title for each option if applicable, e.g., "Standard Account"
+  static Widget buildProductOptionCard(dynamic option, VoidCallback onTap) {
+    return Bounce(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.blue.withOpacity(0.1),
+              spreadRadius: 2,
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.check_circle_outline, color: Colors.green, size: 24), // Icon for option
+                const SizedBox(width: 10),
+                // Could add a title for each option if applicable, e.g., "Standard Account"
+                Text(
+                  'Opsi Trading', // General title for the option
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ],
+            ),
+            const Divider(height: 25, thickness: 0.8, color: Colors.grey),
+            buildDetailRow('Minimum Deposit', option.minimumDeposit),
+            buildDetailRow('Leverage', option.leverage),
+            buildDetailRow('Commission', option.commission),
+            if (option.notes != null && option.notes!.isNotEmpty) ...[
+              const SizedBox(height: 10),
               Text(
-                'Opsi Trading', // General title for the option
+                'Catatan: ${option.notes}',
                 style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
+                  fontSize: 14,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.black54,
                 ),
               ),
             ],
-          ),
-          const Divider(height: 25, thickness: 0.8, color: Colors.grey),
-          buildDetailRow('Minimum Deposit', option.minimumDeposit),
-          buildDetailRow('Leverage', option.leverage),
-          buildDetailRow('Commission', option.commission),
-          if (option.notes != null && option.notes!.isNotEmpty) ...[
-            const SizedBox(height: 10),
-            Text(
-              'Catatan: ${option.notes}',
-              style: const TextStyle(
-                fontSize: 14,
-                fontStyle: FontStyle.italic,
-                color: Colors.black54,
-              ),
-            ),
           ],
-        ],
+        ),
       ),
     );
   }
